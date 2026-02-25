@@ -1,203 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>codefun</title>
-    <link rel="stylesheet" href="../../index.css" />
-    <link rel="stylesheet" href="./Page_group_dapingipad.css" />
-    <script type="text/javascript" src="./Page_group_dapingipad.js"></script>
-  </head>
-  <body>
-    <div class="flex-col justify-start items-start relative page">
-      <div class="flex-col relative section_2">
-        <div class="flex-col group_2">
-          <img
-            class="self-start image_3"
-            src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=cd098d06fdcde37ccbb8cea22b663728.png"
-          />
-          <div class="flex-col justify-start self-stretch relative group_5 mt-11">
-            <div class="section_5"></div>
-            <img
-              class="image_4 pos_4"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=28f271db75b706720f7962fb138450e0.png"
-            />
-          </div>
-        </div>
-        <div class="flex-col mt-46">
-          <img
-            class="self-start image_3 image_5"
-            src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=5aa3e4a2e9c54a04fcfe171fae404596.png"
-          />
-          <div class="flex-col self-stretch group_7">
-            <img
-              class="image_7"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=de2565e32ea0db72f2171cae3f6fbe51.png"
-            />
-            <img
-              class="image_7 image_9"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=6fcca5fa1ebe90d6ad93b56a6f4f95ec.png"
-            />
-            <div class="flex-col justify-start relative group_1">
-              <div class="section_7"></div>
-              <img
-                class="image_7 pos_8"
-                src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=995ee976ea88fa8daff738d493b203f3.png"
-              />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <title>智慧数据面板 - 响应式版</title>
+    <style>
+        /* ===== 全局重置 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        /* ===== 主面板容器 ===== */
+        .dashboard {
+            width: 100%;
+            max-width: 2048px;  /* 保持原设计稿最大宽度 */
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* ===== 顶部状态栏 ===== */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 100px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        /* ===== 主要数据网格 ===== */
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ===== 数据卡片 ===== */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .card-unit {
+            font-size: 1rem;
+            color: #9ca3af;
+            margin-left: 4px;
+        }
+
+        /* ===== 温度特殊样式 ===== */
+        .temp-high {
+            color: #ef4444;
+        }
+
+        .temp-low {
+            color: #3b82f6;
+        }
+
+        /* ===== 监控设备网格 ===== */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .device-item {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .device-name {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .device-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .device-status.warning {
+            background: #f59e0b;
+        }
+
+        /* ===== 流量监控图表占位 ===== */
+        .traffic-chart {
+            background: #f3f4f6;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 200px;
+        }
+
+        .chart-bar {
+            width: 40px;
+            background: linear-gradient(to top, #3b82f6, #8b5cf6);
+            border-radius: 20px 20px 0 0;
+            transition: height 0.3s;
+        }
+
+        .chart-bar:nth-child(1) { height: 70%; }
+        .chart-bar:nth-child(2) { height: 45%; }
+        .chart-bar:nth-child(3) { height: 85%; }
+        .chart-bar:nth-child(4) { height: 30%; }
+        .chart-bar:nth-child(5) { height: 60%; }
+
+        /* ===== 网络监测设备表格样式 ===== */
+        .network-table {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .network-cell {
+            background: #f9fafb;
+            padding: 0.75rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .network-cell .status {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            margin-left: 4px;
+        }
+
+        /* ===== 底部信息 ===== */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        /* ===== 响应式调整 ===== */
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 1rem;
+            }
+            .card-value {
+                font-size: 2rem;
+            }
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 1920px) {
+            .dashboard {
+                font-size: 18px;
+            }
+            .card-value {
+                font-size: 3rem;
+            }
+        }
+
+        /* ===== 图片占位（后续可替换为真实图片） ===== */
+        .icon-placeholder {
+            width: 24px;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- 顶部状态栏 -->
+        <div class="status-bar">
+            <div class="flex items-center gap-2">
+                <span class="icon-placeholder"></span>
+                <span>YUZHI EXHIBITION HALL</span>
             </div>
-            <img
-              class="image_7 image_11"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=9b1b056bdc958bf57b4e0b3735e6dfa0.png"
-            />
-            <img
-              class="image_7 image_13"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=b1257df82d63fe7dcb06932dd3ce089c.png"
-            />
-            <img
-              class="image_7 image_14"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=6fcca5fa1ebe90d6ad93b56a6f4f95ec.png"
-            />
-            <img
-              class="image_7 image_15"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=9b1b056bdc958bf57b4e0b3735e6dfa0.png"
-            />
-            <img
-              class="image_7 image_16"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=995ee976ea88fa8daff738d493b203f3.png"
-            />
-          </div>
-          <div class="flex-col self-stretch group_8">
-            <div class="flex-col justify-start items-start image-wrapper">
-              <img
-                class="image_3"
-                src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=49a33bf55fe9db618aad9d51c736824d.png"
-              />
-            </div>
-            <img
-              class="image_18 image_19 mt-7"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=5024d2b2cf1b1084e935910361bea35d.png"
-            />
-            <img
-              class="image_18 image_20 mt-7"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=c189671c56cc5be108999915e1c6e91b.png"
-            />
-          </div>
+            <div>2026-02-25 15:30</div>
         </div>
-      </div>
-      <div class="flex-row justify-evenly items-start group pos">
-        <img
-          class="image_2"
-          src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=007af29cc664d19f2ff7007734ac5bc4.png"
-        />
-        <div class="flex-col relative section">
-          <div class="flex-col group_3">
-            <img
-              class="self-start image_3"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=be282fac23ed1195e2b8f9513413e33d.png"
-            />
-            <div class="flex-col justify-start items-start self-stretch relative group_4">
-              <div class="section_6"></div>
-              <div class="flex-row section_3 pos_3">
-                <div class="flex-col items-center shrink-0 self-center group_6">
-                  <span class="font">41℃</span>
-                  <span class="font mt-13">42℃</span>
+
+        <!-- 主要数据卡片网格 -->
+        <div class="data-grid">
+            <!-- 温度卡片 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon-placeholder"></span>
+                    温度
                 </div>
-                <span class="self-start text ml-155">29℃</span>
-              </div>
+                <div class="card-value">
+                    <span class="temp-high">41</span><span class="card-unit">℃</span>
+                    <span style="font-size: 1rem; margin: 0 0.5rem;">/</span>
+                    <span class="temp-low">29</span><span class="card-unit">℃</span>
+                </div>
+                <div style="margin-top: 1rem; color: #6b7280;">SW01 · 正常</div>
             </div>
-          </div>
-          <div class="flex-col items-center mt-202">
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=45330cdd248d035e2cf6f1404b181232.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=49062a1c6d5c5be8544b6c49aa06924f.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=49062a1c6d5c5be8544b6c49aa06924f.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=49062a1c6d5c5be8544b6c49aa06924f.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=49062a1c6d5c5be8544b6c49aa06924f.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=cb03d3960bf9b3fdaf131aa94937393a.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=49062a1c6d5c5be8544b6c49aa06924f.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=cb03d3960bf9b3fdaf131aa94937393a.png"
-            />
-            <img
-              class="image_10"
-              src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=580474d4ea56cdf4c7e84f203730d04b.png"
-            />
-          </div>
+
+            <!-- 湿度卡片 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon-placeholder"></span>
+                    湿度
+                </div>
+                <div class="card-value">
+                    65<span class="card-unit">%</span>
+                </div>
+                <div style="margin-top: 1rem; color: #6b7280;">SW02 · 正常</div>
+            </div>
+
+            <!-- 烟雾浓度卡片 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon-placeholder"></span>
+                    烟雾浓度
+                </div>
+                <div class="card-value">
+                    0.02<span class="card-unit">mg/m³</span>
+                </div>
+                <div style="margin-top: 1rem; color: #6b7280;">正常范围</div>
+            </div>
+
+            <!-- 服务器温度卡片 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon-placeholder"></span>
+                    DELL R240
+                </div>
+                <div class="card-value">
+                    38<span class="card-unit">℃</span>
+                </div>
+                <div style="margin-top: 1rem; color: #10b981;">● 正常</div>
+            </div>
         </div>
-        <img
-          class="image pos_2"
-          src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=a06191713c1a68b54bd77a5a6ebb1443.png"
-        />
-        <img
-          class="image_6 pos_6"
-          src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=53904d5abdd5c4afae3c32d867cafdd2.png"
-        />
-        <img
-          class="image_8 pos_7"
-          src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=b0d70fc52158983876a8dff53fc284f1.png"
-        />
-        <div class="flex-col section_4 pos_5">
-          <span class="self-center text_2">网络监测设备</span>
-          <img
-            class="self-start image_12 mt-19"
-            src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=d45494324cb5ff9a179764b210f4c4e7.png"
-          />
+
+        <!-- 网络监测设备区域 -->
+        <div style="background: #f9fafb; border-radius: 24px; padding: 1.5rem;">
+            <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="icon-placeholder"></span>
+                网络监测设备
+            </h3>
+            <div class="network-table">
+                <div class="network-cell">SW01 <span class="status"></span></div>
+                <div class="network-cell">SW03 <span class="status"></span></div>
+                <div class="network-cell">SW04 <span class="status"></span></div>
+                <div class="network-cell">SW05 <span class="status"></span></div>
+                <div class="network-cell">SW06 <span class="status"></span></div>
+                <div class="network-cell">SW08 <span class="status"></span></div>
+                <div class="network-cell">GW97 <span class="status warning"></span></div>
+                <div class="network-cell">FW14 <span class="status"></span></div>
+            </div>
         </div>
-        <img
-          class="image_12 pos_9"
-          src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=c5e14ac5d47d29c35691ea657f8a8a41.png"
-        />
-      </div>
-      <img
-        class="image_17 pos_10"
-        src="https://ide.code.fun/api/image?token=699e6c1c9a40b800116eae38&name=0c0007fcf1fb89621edc90c4e83dbf05.png"
-      />
+
+        <!-- 流量监控区域 -->
+        <div style="background: #f9fafb; border-radius: 24px; padding: 1.5rem;">
+            <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="icon-placeholder"></span>
+                流量监控
+            </h3>
+            <div class="traffic-chart">
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+            </div>
+            <div style="display: flex; justify-content: space-around; margin-top: 0.5rem; color: #6b7280;">
+                <span>移动宽带</span>
+                <span>移动内网</span>
+                <span>视频监控</span>
+                <span>SW4</span>
+                <span>SW8</span>
+            </div>
+        </div>
+
+        <!-- 底部状态信息（模仿原设计中的多行状态） -->
+        <div class="footer">
+            <div>移动宽带出口: 39.3 kb/s</div>
+            <div>大厦局域网: 13.5 kb/s</div>
+            <div>系统在线: 25d 20:42:04</div>
+            <div>实时更新</div>
+        </div>
     </div>
-  </body>
+</body>
 </html>
